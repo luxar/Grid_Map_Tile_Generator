@@ -59,7 +59,7 @@ To host this application on GitHub Pages:
     If you are using Vite (recommended), ensure your `vite.config.ts` sets the base URL to your repository name:
     ```typescript
     export default defineConfig({
-      base: '/<your-repo-name>/', // e.g., '/tilemap-architect/'
+      base: './', // Use relative paths
       plugins: [react()],
     })
     ```
@@ -70,17 +70,13 @@ To host this application on GitHub Pages:
     npm run build
     ```
 
-3.  **Deploy**
-    Upload the contents of your `dist` (or `build`) folder to a `gh-pages` branch or the `/docs` folder of your main branch, depending on your GitHub repository settings.
-
-    *Using gh-pages package:*
-    ```bash
-    # In package.json, add: "homepage": "https://<user>.github.io/<repo>"
-    npm install --save-dev gh-pages
+3.  **Deploy (Important!)**
     
-    # Add script to package.json: "deploy": "gh-pages -d dist"
-    npm run deploy
-    ```
+    1. Go to your GitHub Repository **Settings**.
+    2. Click on **Pages** in the left sidebar.
+    3. Under **Build and deployment** > **Source**, select **GitHub Actions** from the dropdown menu.
+       *(Do not select "Deploy from a branch", as this will serve the source code instead of the built application).*
+    4. Push your changes to the repository. The workflow will automatically build and deploy the site.
 
 ## 📜 License
 
