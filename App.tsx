@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MapGrid } from './components/MapGrid';
 import { TilePalette } from './components/TilePalette';
 import { ReportPanel } from './components/ReportPanel';
