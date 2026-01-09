@@ -1,0 +1,5 @@
+{
+  "name": "TileMap Architect",
+  "description": "A 15x12 tile map designer with real-time resource calculation.",
+  "requestFramePermissions": []
+}
