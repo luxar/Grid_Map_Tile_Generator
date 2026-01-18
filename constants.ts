@@ -17,7 +17,7 @@ export const TILES: TileDefinition[] = [
   { id: 'road_x', label: 'Road X', category: TileCategory.ROAD, bgColor: '#334155', fgColor: '#f8fafc', iconType: 'road_x' },
   { id: 'road_end', label: 'Road End', category: TileCategory.ROAD, bgColor: '#334155', fgColor: '#f8fafc', iconType: 'road_end' },
   { id: 'bridge_start', label: 'Bridge Start', category: TileCategory.ROAD, bgColor: '#334155', fgColor: '#f59e0b', iconType: 'bridge' },
-  { id: 'uphill', label: 'Uphill', category: TileCategory.ROAD, bgColor: '#65a30d', fgColor: '#334155', iconType: 'uphill' },
+  { id: 'uphill', label: 'Uphill', category: TileCategory.ROAD, bgColor: '#334155', fgColor: '#ef4444', iconType: 'uphill' },
 
   // Channels
   { id: 'channel_i', label: 'Channel I', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_i' },

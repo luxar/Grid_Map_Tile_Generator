@@ -98,8 +98,11 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
       case 'uphill':
         return (
            <svg viewBox="0 0 100 100">
-              <path d="M20 90 L80 10" stroke={fgColor} strokeWidth="15" />
-              <path d="M35 90 L95 10" stroke="rgba(0,0,0,0.2)" strokeWidth="15" />
+             {/* Uses bridge style but will be red via fgColor */}
+             <rect x="25" y="0" width="50" height="100" fill={fgColor} />
+             <line x1="25" y1="20" x2="75" y2="20" stroke="black" strokeWidth="2" />
+             <line x1="25" y1="50" x2="75" y2="50" stroke="black" strokeWidth="2" />
+             <line x1="25" y1="80" x2="75" y2="80" stroke="black" strokeWidth="2" />
            </svg>
         );
       case 'dock_l_ext':
