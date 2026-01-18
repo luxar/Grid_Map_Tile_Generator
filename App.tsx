@@ -3,6 +3,7 @@ import { MapGrid } from './components/MapGrid';
 import { TilePalette } from './components/TilePalette';
 import { ReportPanel } from './components/ReportPanel';
 import { ResizeModal } from './components/ResizeModal';
+import { HelpModal } from './components/HelpModal';
 import { GridState, CellData } from './types';
 import { DEFAULT_TILE, DEFAULT_COLS, DEFAULT_ROWS } from './constants';
 
@@ -15,7 +16,9 @@ export default function App() {
   const [grid, setGrid] = useState<GridState>(() => createInitialGrid(DEFAULT_ROWS, DEFAULT_COLS));
   const [selectedTileId, setSelectedTileId] = useState<string>(DEFAULT_TILE);
   const [inventory, setInventory] = useState<Record<string, number>>({});
+  const [tileSize, setTileSize] = useState<number>(4); // Default 4 inches
   const [isResizeModalOpen, setIsResizeModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   // Load inventory from local storage on mount
   useEffect(() => {
@@ -75,7 +78,8 @@ export default function App() {
       );
   };
 
-  const handleResize = (newRows: number, newCols: number) => {
+  const handleResize = (newRows: number, newCols: number, newTileSize: number) => {
+    setTileSize(newTileSize);
     setGrid(prevGrid => {
       const newGrid: GridState = [];
       for (let r = 0; r < newRows; r++) {
@@ -100,6 +104,7 @@ export default function App() {
       const exportData = {
           rows: grid.length,
           cols: grid[0]?.length || 0,
+          tileSize: tileSize,
           grid: grid
       };
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
@@ -128,6 +133,9 @@ export default function App() {
                   // Support both wrapped format and legacy raw array
                   if (data.grid && Array.isArray(data.grid)) {
                       setGrid(data.grid);
+                      if (data.tileSize && typeof data.tileSize === 'number') {
+                          setTileSize(data.tileSize);
+                      }
                   } else if (Array.isArray(data)) {
                       setGrid(data);
                   } else {
@@ -182,6 +190,11 @@ export default function App() {
       input.click();
   };
 
+  const totalWidthInches = (grid[0]?.length || 0) * tileSize;
+  const totalHeightInches = grid.length * tileSize;
+  const totalWidthCm = Math.round(totalWidthInches * 2.54);
+  const totalHeightCm = Math.round(totalHeightInches * 2.54);
+
   return (
     <div className="flex flex-row h-screen w-full bg-slate-950 text-slate-200">
         
@@ -191,6 +204,12 @@ export default function App() {
           onConfirm={handleResize}
           currentRows={grid.length}
           currentCols={grid[0]?.length || 0}
+          currentTileSize={tileSize}
+        />
+
+        <HelpModal 
+          isOpen={isHelpModalOpen}
+          onClose={() => setIsHelpModalOpen(false)}
         />
 
         {/* Left Side: Palette (Toolbox) - Fixed width */}
@@ -212,7 +231,7 @@ export default function App() {
                 
                 <div className="flex items-center gap-4">
                     <div className="text-sm text-slate-400 hidden lg:block">
-                        {grid[0]?.length}x{grid.length} Grid • Click to rotate • Drag to paint
+                        {grid[0]?.length}x{grid.length} Grid <span className="text-slate-600 mx-1">|</span> {totalWidthInches}" x {totalHeightInches}" <span className="text-slate-600 mx-1">/</span> {totalWidthCm}cm x {totalHeightCm}cm
                     </div>
                     <div className="h-6 w-px bg-slate-800 mx-2 hidden lg:block"></div>
                     
@@ -235,6 +254,17 @@ export default function App() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                         Clear Map
+                    </button>
+
+                    <button 
+                        onClick={() => setIsHelpModalOpen(true)}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-400 rounded-lg transition-colors border border-indigo-900/30 text-xs font-medium"
+                        title="How to use"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Help
                     </button>
                 </div>
             </div>
