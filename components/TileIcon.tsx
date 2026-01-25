@@ -21,6 +21,33 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
              <path d="M0 70 Q 25 50 50 70 T 100 70" />
           </svg>
         );
+      case 'greenery':
+        return (
+          <svg viewBox="0 0 100 100">
+            {/* Tree 1 */}
+            <path d="M30 15 L50 50 H10 Z" fill={fgColor} />
+            <rect x="25" y="50" width="10" height="10" fill={fgColor} />
+            
+            {/* Tree 2 */}
+            <path d="M75 35 L90 65 H60 Z" fill={fgColor} />
+            <rect x="72" y="65" width="6" height="10" fill={fgColor} />
+
+            {/* Tree 3 */}
+            <path d="M40 55 L55 85 H25 Z" fill={fgColor} />
+            <rect x="37" y="85" width="6" height="10" fill={fgColor} />
+          </svg>
+        );
+      case 'dirt':
+        return (
+          <svg viewBox="0 0 100 100">
+             {/* Random stones */}
+            <ellipse cx="30" cy="35" rx="12" ry="10" fill={fgColor} />
+            <ellipse cx="75" cy="65" rx="15" ry="12" fill={fgColor} />
+            <circle cx="55" cy="25" r="5" fill={fgColor} />
+            <circle cx="20" cy="80" r="8" fill={fgColor} />
+             <ellipse cx="85" cy="30" rx="6" ry="4" fill={fgColor} />
+          </svg>
+        );
       case 'grid':
         return (
           <svg viewBox="0 0 100 100" fill="none" stroke={fgColor} strokeWidth="4">
@@ -53,6 +80,15 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
              {iconType === 'road_l' && <path d="M50 0 V50 H100" fill="none" stroke={bgColor} strokeWidth="2" strokeDasharray="10 5" />}
           </svg>
         );
+      case 'channel_long_l_aux_2':
+         return (
+           <svg viewBox="0 0 100 100">
+             {/* Top line (Blue matching channel) */}
+             <rect x="0" y="0" width="100" height="20" fill="#0ea5e9" />
+             {/* Left line (Blue matching channel) */}
+             <rect x="0" y="0" width="20" height="100" fill="#0ea5e9" />
+           </svg>
+         );
       case 'road_t':
       case 'channel_t':
       case 'ind_road_t':

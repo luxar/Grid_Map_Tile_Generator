@@ -12,6 +12,13 @@ interface ReportPanelProps {
   onImportCollection: () => void;
 }
 
+// Tiles to exclude from reports and inventory
+const IGNORED_TILES = new Set([
+    'none', 
+    'channel_long_l_aux_1', 
+    'channel_long_l_aux_2'
+]);
+
 export const ReportPanel: React.FC<ReportPanelProps> = ({ 
   grid, 
   inventory,
@@ -28,6 +35,7 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
     const map = new Map<string, number>();
     grid.flat().forEach(cell => {
       const tileId = cell.tileId;
+      if (IGNORED_TILES.has(tileId)) return; // Skip ignored tiles in counting
       map.set(tileId, (map.get(tileId) || 0) + 1);
     });
     return map;
@@ -35,19 +43,22 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
 
   // Report: Used Tiles sorted
   const usedTiles = useMemo(() => {
-    return TILES.filter(t => (counts.get(t.id) || 0) > 0).sort((a, b) => {
+    return TILES.filter(t => !IGNORED_TILES.has(t.id) && (counts.get(t.id) || 0) > 0).sort((a, b) => {
         if (a.category !== b.category) return a.category.localeCompare(b.category);
         return a.label.localeCompare(b.label);
     });
   }, [counts]);
 
-  const totalTiles = grid.flat().length;
+  const totalTiles = useMemo(() => {
+    return grid.flat().filter(cell => !IGNORED_TILES.has(cell.tileId)).length;
+  }, [grid]);
 
-  // Collection: All tiles sorted by category
+  // Collection: All tiles sorted by category, excluding ignored
   const allTilesGrouped = useMemo(() => {
      const grouped: Record<string, typeof TILES> = {};
      Object.values(TileCategory).forEach(cat => grouped[cat] = []);
      TILES.forEach(tile => {
+         if (IGNORED_TILES.has(tile.id)) return;
          if(!grouped[tile.category]) grouped[tile.category] = [];
          grouped[tile.category].push(tile);
      });
@@ -158,52 +169,57 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
             </div>
 
             <div className="space-y-8">
-                {Object.keys(allTilesGrouped).map((cat) => (
-                    <div key={cat}>
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 ml-1 sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800/50">
-                            {cat}
-                        </h3>
-                        <div className="space-y-2">
-                            {allTilesGrouped[cat].map(tile => (
-                                <div key={tile.id} className="flex items-center justify-between p-2 hover:bg-slate-800/50 rounded-lg transition-colors group">
-                                    <div className="flex items-center gap-3 overflow-hidden">
-                                        <div 
-                                            className="w-6 h-6 rounded border border-white/10 shadow-sm flex-shrink-0"
-                                            style={{ backgroundColor: tile.bgColor }}
-                                        ></div>
-                                        <span className="text-sm text-slate-300 truncate group-hover:text-white transition-colors">
-                                            {tile.label}
-                                        </span>
+                {Object.keys(allTilesGrouped).map((cat) => {
+                    const tilesInCategory = allTilesGrouped[cat];
+                    if (tilesInCategory.length === 0) return null;
+
+                    return (
+                        <div key={cat}>
+                            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 ml-1 sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800/50">
+                                {cat}
+                            </h3>
+                            <div className="space-y-2">
+                                {tilesInCategory.map(tile => (
+                                    <div key={tile.id} className="flex items-center justify-between p-2 hover:bg-slate-800/50 rounded-lg transition-colors group">
+                                        <div className="flex items-center gap-3 overflow-hidden">
+                                            <div 
+                                                className="w-6 h-6 rounded border border-white/10 shadow-sm flex-shrink-0"
+                                                style={{ backgroundColor: tile.bgColor }}
+                                            ></div>
+                                            <span className="text-sm text-slate-300 truncate group-hover:text-white transition-colors">
+                                                {tile.label}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button 
+                                                className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                                                onClick={() => onUpdateInventory(tile.id, Math.max(0, (inventory[tile.id] || 0) - 1))}
+                                            >
+                                                -
+                                            </button>
+                                            <input 
+                                                type="number" 
+                                                min="0"
+                                                value={inventory[tile.id] || 0}
+                                                onChange={(e) => {
+                                                    const val = parseInt(e.target.value);
+                                                    onUpdateInventory(tile.id, isNaN(val) ? 0 : Math.max(0, val));
+                                                }}
+                                                className="w-12 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-sm text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/50"
+                                            />
+                                            <button 
+                                                className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                                                onClick={() => onUpdateInventory(tile.id, (inventory[tile.id] || 0) + 1)}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button 
-                                            className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                                            onClick={() => onUpdateInventory(tile.id, Math.max(0, (inventory[tile.id] || 0) - 1))}
-                                        >
-                                            -
-                                        </button>
-                                        <input 
-                                            type="number" 
-                                            min="0"
-                                            value={inventory[tile.id] || 0}
-                                            onChange={(e) => {
-                                                const val = parseInt(e.target.value);
-                                                onUpdateInventory(tile.id, isNaN(val) ? 0 : Math.max(0, val));
-                                            }}
-                                            className="w-12 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-sm text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/50"
-                                        />
-                                        <button 
-                                            className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                                            onClick={() => onUpdateInventory(tile.id, (inventory[tile.id] || 0) + 1)}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
           </div>
         )}

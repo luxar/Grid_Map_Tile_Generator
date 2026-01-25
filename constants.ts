@@ -6,7 +6,9 @@ export const DEFAULT_ROWS = 12;
 export const TILES: TileDefinition[] = [
   // Terrain
   { id: 'none', label: 'None', category: TileCategory.TERRAIN, bgColor: '#000000', fgColor: '#000000', iconType: 'solid' },
-  { id: 'ground', label: 'Ground', category: TileCategory.TERRAIN, bgColor: '#4ade80', fgColor: '#22c55e', iconType: 'solid' },
+  { id: 'ground', label: 'Sidewalk', category: TileCategory.TERRAIN, bgColor: '#FAD6A5', fgColor: '#22c55e', iconType: 'solid' },
+  { id: 'dirt', label: 'Dirt', category: TileCategory.TERRAIN, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'dirt' },
+  { id: 'greenery', label: 'Greenery', category: TileCategory.TERRAIN, bgColor: '#22c55e', fgColor: '#064e3b', iconType: 'greenery' },
   { id: 'sea', label: 'Sea', category: TileCategory.TERRAIN, bgColor: '#3b82f6', fgColor: '#2563eb', iconType: 'waves' },
   { id: 'metal', label: 'Metal', category: TileCategory.TERRAIN, bgColor: '#94a3b8', fgColor: '#64748b', iconType: 'grid' },
 
@@ -26,7 +28,9 @@ export const TILES: TileDefinition[] = [
   { id: 'channel_x', label: 'Channel X', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_x' },
   { id: 'channel_end', label: 'Channel End', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_end' },
   { id: 'channel_footbridge', label: 'Channel Footbridge', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#78350f', iconType: 'channel_foot' },
-  { id: 'channel_long_l', label: 'Chanel Long L', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_long_l' },
+  { id: 'channel_long_l', label: 'Channel Long L', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_long_l' },
+  { id: 'channel_long_l_aux_1', label: 'Channel Long L Aux 1', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_i' },
+  { id: 'channel_long_l_aux_2', label: 'Channel Long L Aux 2', category: TileCategory.CHANNEL, bgColor: '#FAD6A5', fgColor: '#22c55e', iconType: 'channel_long_l_aux_2' },
 
   // Docks
   { id: 'dock_l_ext', label: 'Dock L Ext', category: TileCategory.DOCK, bgColor: '#78350f', fgColor: '#0ea5e9', iconType: 'dock_l_ext' },
