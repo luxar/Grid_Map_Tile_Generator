@@ -17,6 +17,7 @@ export default function App() {
   const [selectedTileId, setSelectedTileId] = useState<string>(DEFAULT_TILE);
   const [inventory, setInventory] = useState<Record<string, number>>({});
   const [tileSize, setTileSize] = useState<number>(4); // Default 4 inches
+  const [gridName, setGridName] = useState<string>("Untitled Map");
   const [isResizeModalOpen, setIsResizeModalOpen] = useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
@@ -102,6 +103,7 @@ export default function App() {
 
   const handleExportGrid = () => {
       const exportData = {
+          name: gridName,
           rows: grid.length,
           cols: grid[0]?.length || 0,
           tileSize: tileSize,
@@ -110,7 +112,12 @@ export default function App() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
       const downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute("href", dataStr);
-      downloadAnchorNode.setAttribute("download", "tilemap_grid.json");
+      
+      // Sanitize name for filename
+      const safeName = gridName.trim().replace(/[^a-z0-9_\-\s]/gi, '').replace(/\s+/g, '_');
+      const fileName = (safeName || "tilemap_grid") + ".json";
+      
+      downloadAnchorNode.setAttribute("download", fileName);
       document.body.appendChild(downloadAnchorNode);
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
@@ -124,6 +131,10 @@ export default function App() {
           const file = (e.target as HTMLInputElement).files?.[0];
           if (!file) return;
 
+          // Set grid name from file name (removing extension)
+          const fileName = file.name.replace(/\.[^/.]+$/, "");
+          setGridName(fileName);
+
           const reader = new FileReader();
           reader.onload = (event) => {
               try {
@@ -136,6 +147,7 @@ export default function App() {
                       if (data.tileSize && typeof data.tileSize === 'number') {
                           setTileSize(data.tileSize);
                       }
+                      // Optionally we could setGridName(data.name) here if we wanted to prioritize file content
                   } else if (Array.isArray(data)) {
                       setGrid(data);
                   } else {
@@ -224,10 +236,28 @@ export default function App() {
         <div className="flex-1 h-full relative flex flex-col min-w-0">
             {/* Header / Top Bar */}
             <div className="h-16 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between px-6 backdrop-blur-sm z-10">
-                <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-brand-500 animate-pulse"></span>
-                    TileMap Architect
-                </h1>
+                <div className="flex items-center gap-4">
+                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-brand-500 animate-pulse"></span>
+                        TileMap Architect
+                    </h1>
+                    
+                    <div className="h-6 w-px bg-slate-800 hidden sm:block"></div>
+                    
+                    <div className="flex items-center gap-2 group">
+                        <input 
+                            type="text" 
+                            value={gridName}
+                            onChange={(e) => setGridName(e.target.value)}
+                            className="bg-transparent border-b border-transparent group-hover:border-slate-700 focus:border-brand-500 focus:bg-slate-900/50 focus:outline-none px-2 py-1 text-slate-200 placeholder-slate-600 font-medium w-40 sm:w-64 transition-all rounded-t"
+                            placeholder="Untitled Map"
+                            title="Rename Map"
+                        />
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-700 group-hover:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </div>
+                </div>
                 
                 <div className="flex items-center gap-4">
                     <div className="text-sm text-slate-400 hidden lg:block">
