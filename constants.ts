@@ -32,6 +32,17 @@ export const TILES: TileDefinition[] = [
   { id: 'channel_long_l_aux_1', label: 'Channel Long L Aux 1', category: TileCategory.CHANNEL, bgColor: '#0ea5e9', fgColor: '#e0f2fe', iconType: 'channel_i' },
   { id: 'channel_long_l_aux_2', label: 'Channel Long L Aux 2', category: TileCategory.CHANNEL, bgColor: '#FAD6A5', fgColor: '#22c55e', iconType: 'channel_long_l_aux_2' },
 
+  // Lava Channels
+  { id: 'lava_channel_i', label: 'Lava Chan. I', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_i' },
+  { id: 'lava_channel_l', label: 'Lava Chan. L', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_l' },
+  { id: 'lava_channel_t', label: 'Lava Chan. T', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_t' },
+  { id: 'lava_channel_x', label: 'Lava Chan. X', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_x' },
+  { id: 'lava_channel_end', label: 'Lava Chan. End', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_end' },
+  { id: 'lava_channel_footbridge', label: 'Lava Footbridge', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#78350f', iconType: 'lava_channel_foot' },
+  { id: 'lava_channel_long_l', label: 'Lava Chan. Long L', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_long_l' },
+  { id: 'lava_channel_long_l_aux_1', label: 'Lava Chan. L Aux 1', category: TileCategory.LAVA_CHANNEL, bgColor: '#dc2626', fgColor: '#fca5a5', iconType: 'channel_i' },
+  { id: 'lava_channel_long_l_aux_2', label: 'Lava Chan. L Aux 2', category: TileCategory.LAVA_CHANNEL, bgColor: '#FAD6A5', fgColor: '#22c55e', iconType: 'lava_channel_long_l_aux_2' },
+
   // Docks
   { id: 'dock_l_ext', label: 'Dock L Ext', category: TileCategory.DOCK, bgColor: '#78350f', fgColor: '#0ea5e9', iconType: 'dock_l_ext' },
   { id: 'dock_l_int', label: 'Dock L Int', category: TileCategory.DOCK, bgColor: '#78350f', fgColor: '#0ea5e9', iconType: 'dock_l_int' },

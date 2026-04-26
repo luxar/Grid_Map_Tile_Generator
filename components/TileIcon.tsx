@@ -89,6 +89,15 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
              <rect x="0" y="0" width="20" height="100" fill="#0ea5e9" />
            </svg>
          );
+      case 'lava_channel_long_l_aux_2':
+         return (
+           <svg viewBox="0 0 100 100">
+             {/* Top line (Red matching lava channel) */}
+             <rect x="0" y="0" width="100" height="20" fill="#dc2626" />
+             {/* Left line (Red matching lava channel) */}
+             <rect x="0" y="0" width="20" height="100" fill="#dc2626" />
+           </svg>
+         );
       case 'road_t':
       case 'channel_t':
       case 'ind_road_t':
@@ -184,6 +193,13 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
            <svg viewBox="0 0 100 100">
              <rect x="35" y="0" width="30" height="100" fill={fgColor} />
               <rect x="0" y="35" width="100" height="30" fill="#ffffff" />
+           </svg>
+         );
+       case 'lava_channel_foot':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="35" y="0" width="30" height="100" fill={fgColor} />
+              <rect x="0" y="35" width="100" height="30" fill="#fca5a5" />
            </svg>
          );
       default:

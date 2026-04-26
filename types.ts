@@ -2,6 +2,7 @@ export enum TileCategory {
   TERRAIN = 'Terrain',
   ROAD = 'Road',
   CHANNEL = 'Channel',
+  LAVA_CHANNEL = 'Lava Channel',
   DOCK = 'Dock',
   INDUSTRY = 'Industry',
 }
