@@ -9,12 +9,13 @@ import { DEFAULT_TILE, DEFAULT_COLS, DEFAULT_ROWS } from './constants';
 
 const createInitialGrid = (rows: number, cols: number): GridState => 
   Array.from({ length: rows }, () => 
-    Array.from({ length: cols }, () => ({ tileId: DEFAULT_TILE, rotation: 0 }))
+    Array.from({ length: cols }, () => ({ tileId: DEFAULT_TILE, rotation: 0, height: 0 }))
   );
 
 export default function App() {
   const [grid, setGrid] = useState<GridState>(() => createInitialGrid(DEFAULT_ROWS, DEFAULT_COLS));
   const [selectedTileId, setSelectedTileId] = useState<string>(DEFAULT_TILE);
+  const [currentHeight, setCurrentHeight] = useState<number>(0);
   const [inventory, setInventory] = useState<Record<string, number>>({});
   const [tileSize, setTileSize] = useState<number>(4); // Default 4 inches
   const [gridName, setGridName] = useState<string>("Untitled Map");
@@ -46,13 +47,14 @@ export default function App() {
       const newGrid = prevGrid.map(r => r.map(c => ({ ...c })));
       const cell = newGrid[row][col];
 
-      if (cell.tileId === selectedTileId) {
-        // Rotate if same tile
+      if (cell.tileId === selectedTileId && (cell.height || 0) === currentHeight) {
+        // Rotate if same tile and same height
         cell.rotation = (cell.rotation + 90) % 360;
       } else {
         // Place new tile
         cell.tileId = selectedTileId;
         cell.rotation = 0;
+        cell.height = currentHeight;
       }
       return newGrid;
     });
@@ -62,10 +64,10 @@ export default function App() {
     // This supports drag-to-paint
     setGrid(prevGrid => {
       // Optimization: only update if different to avoid rerenders
-      if (prevGrid[row][col].tileId === selectedTileId) return prevGrid;
+      if (prevGrid[row][col].tileId === selectedTileId && (prevGrid[row][col].height || 0) === currentHeight) return prevGrid;
       
       const newGrid = prevGrid.map(r => r.map(c => ({ ...c })));
-      newGrid[row][col] = { tileId: selectedTileId, rotation: 0 };
+      newGrid[row][col] = { tileId: selectedTileId, rotation: 0, height: currentHeight };
       return newGrid;
     });
   };
@@ -74,7 +76,7 @@ export default function App() {
       // Explicitly set all tiles to 'ground' based on current grid size
       setGrid(prevGrid => 
           Array.from({ length: prevGrid.length }, () => 
-              Array.from({ length: prevGrid[0].length }, () => ({ tileId: 'ground', rotation: 0 }))
+              Array.from({ length: prevGrid[0].length }, () => ({ tileId: 'ground', rotation: 0, height: 0 }))
           )
       );
   };
@@ -91,7 +93,7 @@ export default function App() {
             newRow.push({ ...prevGrid[r][c] });
           } else {
             // New cell
-            newRow.push({ tileId: DEFAULT_TILE, rotation: 0 });
+            newRow.push({ tileId: DEFAULT_TILE, rotation: 0, height: 0 });
           }
         }
         newGrid.push(newRow);
@@ -142,14 +144,17 @@ export default function App() {
                   const data = JSON.parse(content);
 
                   // Support both wrapped format and legacy raw array
+                  const normalizeGrid = (gridToLoad: any[][]) => 
+                      gridToLoad.map(row => row.map(cell => ({ ...cell, height: cell.height || 0 })));
+
                   if (data.grid && Array.isArray(data.grid)) {
-                      setGrid(data.grid);
+                      setGrid(normalizeGrid(data.grid));
                       if (data.tileSize && typeof data.tileSize === 'number') {
                           setTileSize(data.tileSize);
                       }
                       // Optionally we could setGridName(data.name) here if we wanted to prioritize file content
                   } else if (Array.isArray(data)) {
-                      setGrid(data);
+                      setGrid(normalizeGrid(data));
                   } else {
                       alert('Invalid grid file format');
                   }
@@ -265,6 +270,22 @@ export default function App() {
                     </div>
                     <div className="h-6 w-px bg-slate-800 mx-2 hidden lg:block"></div>
                     
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-slate-400 whitespace-nowrap">Elevation</label>
+                        <select 
+                            value={currentHeight} 
+                            onChange={(e) => setCurrentHeight(Number(e.target.value))}
+                            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg px-2 py-1 focus:outline-none focus:border-brand-500 text-xs font-medium cursor-pointer transition-colors"
+                        >
+                            <option value={0}>0</option>
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                        </select>
+                    </div>
+
+                    <div className="h-6 w-px bg-slate-800 mx-2 hidden lg:block"></div>
+
                     <button 
                         onClick={() => setIsResizeModalOpen(true)}
                         className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700 text-xs font-medium"
@@ -311,6 +332,7 @@ export default function App() {
                 
                 <MapGrid 
                     grid={grid} 
+                    currentHeight={currentHeight}
                     onCellClick={handleCellClick} 
                     onCellEnter={handleCellEnter}
                 />

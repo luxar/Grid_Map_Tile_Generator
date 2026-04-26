@@ -19,6 +19,7 @@ export interface TileDefinition {
 export interface CellData {
   tileId: string;
   rotation: number;
+  height?: number;
 }
 
 export type GridState = CellData[][]; // 2D array of CellData

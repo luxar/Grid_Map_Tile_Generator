@@ -5,11 +5,12 @@ import { TileIcon } from './TileIcon';
 
 interface MapGridProps {
   grid: GridState;
+  currentHeight: number;
   onCellClick: (row: number, col: number) => void;
   onCellEnter: (row: number, col: number) => void;
 }
 
-export const MapGrid: React.FC<MapGridProps> = ({ grid, onCellClick, onCellEnter }) => {
+export const MapGrid: React.FC<MapGridProps> = ({ grid, currentHeight, onCellClick, onCellEnter }) => {
   const handleMouseDown = useCallback((r: number, c: number) => {
     onCellClick(r, c);
   }, [onCellClick]);
@@ -40,6 +41,9 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, onCellClick, onCellEnter
         {grid.map((row, rIndex) =>
           row.map((cell, cIndex) => {
             const tile = TILE_MAP[cell.tileId];
+            const isFaded = (cell.height || 0) !== currentHeight;
+            const opacityClass = isFaded ? 'opacity-30' : 'opacity-100';
+
             return (
               <div
                 key={`${rIndex}-${cIndex}`}
@@ -52,8 +56,8 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, onCellClick, onCellEnter
                          handleMouseEnter(rIndex, cIndex);
                     }
                 }}
-                className="relative border border-slate-800/30 cursor-crosshair hover:ring-2 hover:ring-white/50 hover:z-10 transition-transform duration-200"
-                title={`Row: ${rIndex + 1}, Col: ${cIndex + 1}, Rot: ${cell.rotation}°`}
+                className={`relative border border-slate-800/30 cursor-crosshair hover:ring-2 hover:ring-white/50 hover:z-10 transition-all duration-200 ${opacityClass}`}
+                title={`Row: ${rIndex + 1}, Col: ${cIndex + 1}, Rot: ${cell.rotation}°, Height: ${cell.height || 0}`}
               >
                 <div className="w-full h-full" style={{ transform: `rotate(${cell.rotation}deg)` }}>
                     {tile && <TileIcon tile={tile} className="w-full h-full" />}
