@@ -5,6 +5,8 @@ export enum TileCategory {
   LAVA_CHANNEL = 'Lava Channel',
   DOCK = 'Dock',
   INDUSTRY = 'Industry',
+  TRENCH = 'Trench',
+  MUD = 'Mud',
 }
 
 export interface TileDefinition {

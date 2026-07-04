@@ -202,6 +202,91 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
               <rect x="0" y="35" width="100" height="30" fill="#fca5a5" />
            </svg>
          );
+       case 'trench_bridge':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="35" y="0" width="30" height="100" fill={fgColor} />
+             <rect x="0" y="35" width="100" height="30" fill="#ef4444" />
+           </svg>
+         );
+       case 'trench_half':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="0" width="50" height="100" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M50,50 L100,50 M50,75 L100,75 M50,0 L50,100 M75,0 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <line x1="50" y1="0" x2="50" y2="100" stroke="#ef4444" strokeWidth="4" />
+           </svg>
+         );
+       case 'trench_quarter':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="0" width="50" height="50" fill="#94a3b8" />
+             <rect x="0" y="50" width="100" height="50" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M0,50 L100,50 M0,75 L100,75 M25,50 L25,100 M50,0 L50,100 M75,0 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <path d="M0,50 L50,50 L50,0" stroke="#ef4444" strokeWidth="4" fill="none" />
+           </svg>
+         );
+       case 'trench_3quarter':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="50" width="50" height="50" fill="#94a3b8" />
+             <path d="M50,50 L100,50 M50,75 L100,75 M50,50 L50,100 M75,50 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <path d="M100,50 L50,50 L50,100" stroke="#ef4444" strokeWidth="4" fill="none" />
+           </svg>
+         );
+       case 'trench_half_start':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="0" width="50" height="100" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M50,50 L100,50 M50,75 L100,75 M50,0 L50,100 M75,0 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <line x1="50" y1="0" x2="50" y2="100" stroke="#ef4444" strokeWidth="4" />
+             <rect x="0" y="35" width="100" height="30" fill={fgColor} />
+           </svg>
+         );
+       case 'trench_3quarter_start':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="50" width="50" height="50" fill="#94a3b8" />
+             <path d="M50,50 L100,50 M50,75 L100,75 M50,50 L50,100 M75,50 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <path d="M100,50 L50,50 L50,100" stroke="#ef4444" strokeWidth="4" fill="none" />
+             <rect x="35" y="0" width="30" height="100" fill={fgColor} />
+           </svg>
+         );
+       case 'mud_half':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="0" width="50" height="100" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M50,50 L100,50 M50,75 L100,75 M50,0 L50,100 M75,0 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+           </svg>
+         );
+       case 'mud_quarter':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="0" width="50" height="50" fill="#94a3b8" />
+             <rect x="0" y="50" width="100" height="50" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M0,50 L100,50 M0,75 L100,75 M25,50 L25,100 M50,0 L50,100 M75,0 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+           </svg>
+         );
+       case 'mud_3quarter':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="50" y="50" width="50" height="50" fill="#94a3b8" />
+             <path d="M50,50 L100,50 M50,75 L100,75 M50,50 L50,100 M75,50 L75,100" stroke="#64748b" strokeWidth="2" fill="none" />
+           </svg>
+         );
+       case 'mud_hill_i':
+         return (
+           <svg viewBox="0 0 100 100">
+             <line x1="98" y1="0" x2="98" y2="100" stroke="#ef4444" strokeWidth="4" />
+           </svg>
+         );
+       case 'mud_hill_l':
+         return (
+           <svg viewBox="0 0 100 100">
+             <line x1="98" y1="0" x2="98" y2="100" stroke="#ef4444" strokeWidth="4" />
+             <line x1="0" y1="98" x2="100" y2="98" stroke="#ef4444" strokeWidth="4" />
+           </svg>
+         );
       default:
         return null;
     }
