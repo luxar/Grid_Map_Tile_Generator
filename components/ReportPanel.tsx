@@ -36,7 +36,13 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
     grid.flat().forEach(cell => {
       const tileId = cell.tileId;
       if (IGNORED_TILES.has(tileId)) return; // Skip ignored tiles in counting
-      map.set(tileId, (map.get(tileId) || 0) + 1);
+      
+      if (tileId === 'high_mud') {
+        map.set('mud', (map.get('mud') || 0) + 1);
+        map.set('tile_riser', (map.get('tile_riser') || 0) + 1);
+      } else {
+        map.set(tileId, (map.get(tileId) || 0) + 1);
+      }
     });
     return map;
   }, [grid]);
@@ -50,7 +56,11 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
   }, [counts]);
 
   const totalTiles = useMemo(() => {
-    return grid.flat().filter(cell => !IGNORED_TILES.has(cell.tileId)).length;
+    return grid.flat().reduce((acc, cell) => {
+      if (IGNORED_TILES.has(cell.tileId)) return acc;
+      if (cell.tileId === 'high_mud') return acc + 2;
+      return acc + 1;
+    }, 0);
   }, [grid]);
 
   // Collection: All tiles sorted by category, excluding ignored
@@ -58,7 +68,7 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
      const grouped: Record<string, typeof TILES> = {};
      Object.values(TileCategory).forEach(cat => grouped[cat] = []);
      TILES.forEach(tile => {
-         if (IGNORED_TILES.has(tile.id)) return;
+         if (IGNORED_TILES.has(tile.id) || tile.id === 'high_mud') return;
          if(!grouped[tile.category]) grouped[tile.category] = [];
          grouped[tile.category].push(tile);
      });

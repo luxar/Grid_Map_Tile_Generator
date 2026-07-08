@@ -12,6 +12,7 @@ export const TILES: TileDefinition[] = [
   { id: 'sea', label: 'Sea', category: TileCategory.TERRAIN, bgColor: '#3b82f6', fgColor: '#2563eb', iconType: 'waves' },
   { id: 'metal', label: 'Metal', category: TileCategory.TERRAIN, bgColor: '#94a3b8', fgColor: '#64748b', iconType: 'grid' },
   { id: 'industrial', label: 'Industrial', category: TileCategory.TERRAIN, bgColor: '#b87333', fgColor: '#8c5226', iconType: 'grid' },
+  { id: 'tile_riser', label: 'Tile Riser', category: TileCategory.TERRAIN, bgColor: '#cbd5e1', fgColor: '#94a3b8', iconType: 'solid' },
 
   // Roads
   { id: 'road_i', label: 'Road I', category: TileCategory.ROAD, bgColor: '#334155', fgColor: '#f8fafc', iconType: 'road_i' },
@@ -45,26 +46,27 @@ export const TILES: TileDefinition[] = [
   { id: 'lava_channel_long_l_aux_2', label: 'Lava Chan. L Aux 2', category: TileCategory.LAVA_CHANNEL, bgColor: '#FAD6A5', fgColor: '#22c55e', iconType: 'lava_channel_long_l_aux_2' },
 
   // Trench
-  { id: 'trench_i', label: 'Trench I', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'channel_i' },
-  { id: 'trench_l', label: 'Trench L', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'channel_l' },
-  { id: 'trench_t', label: 'Trench T', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'channel_t' },
-  { id: 'trench_x', label: 'Trench X', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'channel_x' },
-  { id: 'trench_end', label: 'Trench End', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'channel_end' },
-  { id: 'trench_bridge', label: 'Trench Bridge', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_bridge' },
-  { id: 'trench_half', label: 'Trench Half', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_half' },
-  { id: 'trench_quarter', label: 'Trench Quarter', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_quarter' },
-  { id: 'trench_3quarter', label: 'Trench 3 Quarter', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_3quarter' },
-  { id: 'trench_half_start', label: 'Trench Half Start', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_half_start' },
-  { id: 'trench_3quarter_start', label: 'Trench 3 Q. Start', category: TileCategory.TRENCH, bgColor: '#5c433a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start' },
+  { id: 'trench_i', label: 'Trench I', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_i' },
+  { id: 'trench_l', label: 'Trench L', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_l' },
+  { id: 'trench_t', label: 'Trench T', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_t' },
+  { id: 'trench_x', label: 'Trench X', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_x' },
+  { id: 'trench_end', label: 'Trench End', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_end' },
+  { id: 'trench_bridge', label: 'Trench Bridge', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_bridge' },
+  { id: 'trench_half', label: 'Trench Half', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_half' },
+  { id: 'trench_quarter', label: 'Trench Quarter', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_quarter' },
+  { id: 'trench_3quarter', label: 'Trench 3 Quarter', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter' },
+  { id: 'trench_half_start', label: 'Trench Half Start', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_half_start' },
+  { id: 'trench_3quarter_start', label: 'Trench 3 Q. Start', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start' },
 
   // Mud
   { id: 'mud', label: 'Mud', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'solid' },
-  { id: 'high_mud', label: 'High Mud', category: TileCategory.MUD, bgColor: '#5c433a', fgColor: '#9ca3af', iconType: 'solid' },
+  { id: 'high_mud', label: 'High Mud', category: TileCategory.MUD, bgColor: '#7d5b4a', fgColor: '#9ca3af', iconType: 'solid' },
   { id: 'mud_half', label: 'Mud Half', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#94a3b8', iconType: 'mud_half' },
   { id: 'mud_quarter', label: 'Mud Quarter', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#94a3b8', iconType: 'mud_quarter' },
   { id: 'mud_3quarter', label: 'Mud 3 Quarter', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#94a3b8', iconType: 'mud_3quarter' },
   { id: 'mud_hill_i', label: 'Mud Hill I', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'mud_hill_i' },
-  { id: 'mud_hill_l', label: 'Mud Hill L', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'mud_hill_l' },
+  { id: 'mud_hill_l', label: 'Mud Hill L A', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'mud_hill_l' },
+  { id: 'mud_hill_l_b', label: 'Mud Hill L B', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'mud_hill_l_b' },
 
   // Docks
   { id: 'dock_l_ext', label: 'Dock L Ext', category: TileCategory.DOCK, bgColor: '#78350f', fgColor: '#0ea5e9', iconType: 'dock_l_ext' },
