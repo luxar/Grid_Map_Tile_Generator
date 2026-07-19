@@ -247,6 +247,24 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
              <rect x="35" y="0" width="30" height="100" fill={fgColor} />
            </svg>
          );
+       case 'trench_to_mud_hill':
+         return (
+           <svg viewBox="0 0 100 100">
+             <defs>
+               <linearGradient id="trenchMudHillGradient" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+                 <stop offset="0%" stopColor="#7d5b4a" />
+                 <stop offset="100%" stopColor="#3f2e27" />
+               </linearGradient>
+             </defs>
+             {/* Bottom half: Mud Hill I */}
+             <rect x="0" y="50" width="100" height="50" fill="url(#trenchMudHillGradient)" />
+             {/* Top half left: Trench Background */}
+             <rect x="0" y="0" width="50" height="50" fill="#7d5b4a" />
+             {/* Top half right: Metal grid */}
+             <rect x="50" y="0" width="50" height="50" fill="#94a3b8" />
+             <path d="M50,25 L100,25 M50,50 L100,50 M50,0 L50,50 M75,0 L75,50" stroke="#64748b" strokeWidth="2" fill="none" />
+           </svg>
+         );
        case 'mud_half':
          return (
            <svg viewBox="0 0 100 100">
