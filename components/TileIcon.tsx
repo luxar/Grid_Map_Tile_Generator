@@ -247,6 +247,14 @@ export const TileIcon: React.FC<TileIconProps> = ({ tile, className }) => {
              <rect x="35" y="0" width="30" height="100" fill={fgColor} />
            </svg>
          );
+       case 'trench_3quarter_start_inv':
+         return (
+           <svg viewBox="0 0 100 100">
+             <rect x="0" y="50" width="50" height="50" fill="#94a3b8" />
+             <path d="M50,50 L0,50 M50,75 L0,75 M50,50 L50,100 M25,50 L25,100" stroke="#64748b" strokeWidth="2" fill="none" />
+             <rect x="35" y="0" width="30" height="100" fill={fgColor} />
+           </svg>
+         );
        case 'trench_to_mud_hill':
          return (
            <svg viewBox="0 0 100 100">

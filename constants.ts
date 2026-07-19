@@ -57,6 +57,7 @@ export const TILES: TileDefinition[] = [
   { id: 'trench_3quarter', label: 'Trench 3 Quarter', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter' },
   { id: 'trench_half_start', label: 'Trench Half Start', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_half_start' },
   { id: 'trench_3quarter_start', label: 'Trench 3 Q. Start', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start' },
+  { id: 'trench_3quarter_start_inv', label: 'Trench 3 Q. Start Inv', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start_inv' },
   { id: 'trench_to_mud_hill', label: 'Trench to Mud Hill', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_to_mud_hill' },
 
   // Mud
