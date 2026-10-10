@@ -63,6 +63,17 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
     }, 0);
   }, [grid]);
 
+  const totalMissingTiles = useMemo(() => {
+    let missing = 0;
+    counts.forEach((needed, tileId) => {
+      const owned = inventory[tileId] || 0;
+      if (needed > owned) {
+        missing += (needed - owned);
+      }
+    });
+    return missing;
+  }, [counts, inventory]);
+
   // Collection: All tiles sorted by category, excluding ignored
   const allTilesGrouped = useMemo(() => {
      const grouped: Record<string, typeof TILES> = {};
@@ -121,14 +132,23 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
         {activeTab === 'report' && (
           <>
             <div className="p-6 border-b border-slate-800">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-start justify-between mb-2">
                     <h2 className="text-lg font-bold text-white">Total Tiles Required</h2>
-                    <span className="text-xs font-mono text-brand-400 bg-brand-950/60 border border-brand-500/30 px-2.5 py-1 rounded font-semibold">
-                        Total: {totalTiles}
-                    </span>
+                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                        <span className="text-xs font-mono text-brand-400 bg-brand-950/60 border border-brand-500/30 px-2.5 py-1 rounded font-semibold whitespace-nowrap">
+                            Total: {totalTiles}
+                        </span>
+                        <span className={`text-xs font-mono px-2.5 py-1 rounded font-semibold border whitespace-nowrap ${
+                            totalMissingTiles > 0 
+                                ? 'text-rose-400 bg-rose-950/60 border-rose-500/30' 
+                                : 'text-emerald-400 bg-emerald-950/60 border-emerald-500/30'
+                        }`}>
+                            Missing: {totalMissingTiles}
+                        </span>
+                    </div>
                 </div>
                 <p className="text-sm text-slate-400">
-                    Calculated based on current map layout. Red numbers indicate you need more tiles than you own.
+                    Calculated based on current map layout. Red indicates shortages, yellow indicates exact match.
                 </p>
             </div>
             
@@ -150,9 +170,19 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
                                   const needed = counts.get(tile.id) || 0;
                                   const owned = inventory[tile.id] || 0;
                                   const isMissing = needed > owned;
+                                  const isExact = needed === owned;
 
                                   return (
-                                    <div key={tile.id} className={`flex items-center justify-between p-3 rounded-lg border ${isMissing ? 'bg-rose-900/10 border-rose-900/30' : 'bg-slate-800 border-slate-700/50'}`}>
+                                    <div 
+                                      key={tile.id} 
+                                      className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                                        isMissing 
+                                          ? 'bg-rose-900/10 border-rose-900/30' 
+                                          : isExact 
+                                            ? 'bg-yellow-950/20 border-yellow-500/30' 
+                                            : 'bg-slate-800 border-slate-700/50'
+                                      }`}
+                                    >
                                         <div className="flex items-center gap-3">
                                             <div 
                                                 className="w-8 h-8 rounded border border-white/10 shadow-sm flex-shrink-0"
@@ -161,10 +191,22 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
                                             <span className="text-sm font-medium text-slate-200">{tile.label}</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className={`text-lg font-bold font-mono block leading-none ${isMissing ? 'text-rose-400' : 'text-brand-400'}`}>
+                                            <span className={`text-lg font-bold font-mono block leading-none ${
+                                              isMissing 
+                                                ? 'text-rose-400' 
+                                                : isExact 
+                                                  ? 'text-yellow-400' 
+                                                  : 'text-brand-400'
+                                            }`}>
                                                 {needed}
                                             </span>
-                                            <span className={`text-[10px] ${isMissing ? 'text-rose-300/70' : 'text-slate-500'}`}>
+                                            <span className={`text-[10px] ${
+                                              isMissing 
+                                                ? 'text-rose-300/70' 
+                                                : isExact 
+                                                  ? 'text-yellow-300/80 font-medium' 
+                                                  : 'text-slate-500'
+                                            }`}>
                                                 Have: {owned}
                                             </span>
                                         </div>
