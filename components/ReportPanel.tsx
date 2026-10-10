@@ -75,6 +75,18 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
      return grouped;
   }, []);
 
+  const totalCollectionTiles = useMemo(() => {
+    let total = 0;
+    TILES.forEach(tile => {
+      if (IGNORED_TILES.has(tile.id) || tile.id === 'high_mud') return;
+      const count = inventory[tile.id] || 0;
+      if (typeof count === 'number' && !isNaN(count) && count > 0) {
+        total += count;
+      }
+    });
+    return total;
+  }, [inventory]);
+
   return (
     <div className="flex flex-col h-full bg-slate-900 border-l border-slate-800">
       
@@ -110,8 +122,8 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
           <>
             <div className="p-6 border-b border-slate-800">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-lg font-bold text-white">Required Tiles</h2>
-                    <span className="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">
+                    <h2 className="text-lg font-bold text-white">Total Tiles Required</h2>
+                    <span className="text-xs font-mono text-brand-400 bg-brand-950/60 border border-brand-500/30 px-2.5 py-1 rounded font-semibold">
                         Total: {totalTiles}
                     </span>
                 </div>
@@ -170,68 +182,81 @@ export const ReportPanel: React.FC<ReportPanelProps> = ({
 
         {/* === COLLECTION TAB === */}
         {activeTab === 'collection' && (
-          <div className="p-6">
-            <div className="mb-6">
-                <h2 className="text-lg font-bold text-white mb-2">My Inventory</h2>
+          <>
+            <div className="p-6 border-b border-slate-800">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-lg font-bold text-white">Total Tiles in Collection</h2>
+                    <span className="text-xs font-mono text-brand-400 bg-brand-950/60 border border-brand-500/30 px-2.5 py-1 rounded font-semibold">
+                        Total: {totalCollectionTiles}
+                    </span>
+                </div>
                 <p className="text-sm text-slate-400">
                     Enter the number of tiles you own. Your collection is saved automatically in your browser.
                 </p>
             </div>
 
-            <div className="space-y-8">
-                {Object.keys(allTilesGrouped).map((cat) => {
-                    const tilesInCategory = allTilesGrouped[cat];
-                    if (tilesInCategory.length === 0) return null;
+            <div className="p-6">
+                <div className="space-y-8">
+                    {Object.keys(allTilesGrouped).map((cat) => {
+                        const tilesInCategory = allTilesGrouped[cat];
+                        if (tilesInCategory.length === 0) return null;
+                        const catTotal = tilesInCategory.reduce((sum, t) => sum + (inventory[t.id] || 0), 0);
 
-                    return (
-                        <div key={cat}>
-                            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 ml-1 sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800/50">
-                                {cat}
-                            </h3>
-                            <div className="space-y-2">
-                                {tilesInCategory.map(tile => (
-                                    <div key={tile.id} className="flex items-center justify-between p-2 hover:bg-slate-800/50 rounded-lg transition-colors group">
-                                        <div className="flex items-center gap-3 overflow-hidden">
-                                            <div 
-                                                className="w-6 h-6 rounded border border-white/10 shadow-sm flex-shrink-0"
-                                                style={{ backgroundColor: tile.bgColor }}
-                                            ></div>
-                                            <span className="text-sm text-slate-300 truncate group-hover:text-white transition-colors">
-                                                {tile.label}
-                                            </span>
+                        return (
+                            <div key={cat}>
+                                <div className="flex items-center justify-between mb-3 ml-1 sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800/50">
+                                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        {cat}
+                                    </h3>
+                                    <span className="text-[11px] font-mono text-slate-400 mr-1">
+                                        {catTotal} {catTotal === 1 ? 'tile' : 'tiles'}
+                                    </span>
+                                </div>
+                                <div className="space-y-2">
+                                    {tilesInCategory.map(tile => (
+                                        <div key={tile.id} className="flex items-center justify-between p-2 hover:bg-slate-800/50 rounded-lg transition-colors group">
+                                            <div className="flex items-center gap-3 overflow-hidden">
+                                                <div 
+                                                    className="w-6 h-6 rounded border border-white/10 shadow-sm flex-shrink-0"
+                                                    style={{ backgroundColor: tile.bgColor }}
+                                                ></div>
+                                                <span className="text-sm text-slate-300 truncate group-hover:text-white transition-colors">
+                                                    {tile.label}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button 
+                                                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                                                    onClick={() => onUpdateInventory(tile.id, Math.max(0, (inventory[tile.id] || 0) - 1))}
+                                                >
+                                                    -
+                                                </button>
+                                                <input 
+                                                    type="number" 
+                                                    min="0"
+                                                    value={inventory[tile.id] || 0}
+                                                    onChange={(e) => {
+                                                        const val = parseInt(e.target.value);
+                                                        onUpdateInventory(tile.id, isNaN(val) ? 0 : Math.max(0, val));
+                                                    }}
+                                                    className="w-12 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-sm text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/50"
+                                                />
+                                                <button 
+                                                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                                                    onClick={() => onUpdateInventory(tile.id, (inventory[tile.id] || 0) + 1)}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <button 
-                                                className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                                                onClick={() => onUpdateInventory(tile.id, Math.max(0, (inventory[tile.id] || 0) - 1))}
-                                            >
-                                                -
-                                            </button>
-                                            <input 
-                                                type="number" 
-                                                min="0"
-                                                value={inventory[tile.id] || 0}
-                                                onChange={(e) => {
-                                                    const val = parseInt(e.target.value);
-                                                    onUpdateInventory(tile.id, isNaN(val) ? 0 : Math.max(0, val));
-                                                }}
-                                                className="w-12 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-sm text-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/50"
-                                            />
-                                            <button 
-                                                className="w-6 h-6 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                                                onClick={() => onUpdateInventory(tile.id, (inventory[tile.id] || 0) + 1)}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
-          </div>
+          </>
         )}
 
       </div>

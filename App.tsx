@@ -5,7 +5,7 @@ import { ReportPanel } from './components/ReportPanel';
 import { ResizeModal } from './components/ResizeModal';
 import { HelpModal } from './components/HelpModal';
 import { GridState, CellData } from './types';
-import { DEFAULT_TILE, DEFAULT_COLS, DEFAULT_ROWS } from './constants';
+import { DEFAULT_TILE, DEFAULT_COLS, DEFAULT_ROWS, TILE_MAP } from './constants';
 
 const createInitialGrid = (rows: number, cols: number): GridState => 
   Array.from({ length: rows }, () => 
@@ -145,7 +145,14 @@ export default function App() {
 
                   // Support both wrapped format and legacy raw array
                   const normalizeGrid = (gridToLoad: any[][]) => 
-                      gridToLoad.map(row => row.map(cell => ({ ...cell, height: cell.height || 0 })));
+                      gridToLoad.map(row => row.map(cell => {
+                          const isSupported = cell && typeof cell.tileId === 'string' && !!TILE_MAP[cell.tileId];
+                          return {
+                              tileId: isSupported ? cell.tileId : 'none',
+                              rotation: typeof cell?.rotation === 'number' ? cell.rotation : 0,
+                              height: cell?.height || 0
+                          };
+                      }));
 
                   if (data.grid && Array.isArray(data.grid)) {
                       setGrid(normalizeGrid(data.grid));

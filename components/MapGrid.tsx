@@ -40,7 +40,7 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, currentHeight, onCellCli
       >
         {grid.map((row, rIndex) =>
           row.map((cell, cIndex) => {
-            const tile = TILE_MAP[cell.tileId];
+            const tile = TILE_MAP[cell.tileId] || TILE_MAP['none'];
             const isFaded = (cell.height || 0) !== currentHeight;
             const opacityClass = isFaded ? 'opacity-30' : 'opacity-100';
 

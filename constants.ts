@@ -51,7 +51,6 @@ export const TILES: TileDefinition[] = [
   { id: 'trench_t', label: 'Trench T', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_t' },
   { id: 'trench_x', label: 'Trench X', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_x' },
   { id: 'trench_end', label: 'Trench End', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'channel_end' },
-  { id: 'trench_bridge', label: 'Trench Bridge', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_bridge' },
   { id: 'trench_half', label: 'Trench Half', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_half' },
   { id: 'trench_quarter', label: 'Trench Quarter', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_quarter' },
   { id: 'trench_3quarter', label: 'Trench 3 Quarter', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter' },
@@ -59,6 +58,7 @@ export const TILES: TileDefinition[] = [
   { id: 'trench_3quarter_start', label: 'Trench 3 Q. Start', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start' },
   { id: 'trench_3quarter_start_inv', label: 'Trench 3 Q. Start Inv', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_3quarter_start_inv' },
   { id: 'trench_to_mud_hill', label: 'Trench to Mud Hill', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_to_mud_hill' },
+  { id: 'trench_to_mud_hill_inv', label: 'Trench to Mud Hill Inv', category: TileCategory.TRENCH, bgColor: '#7d5b4a', fgColor: '#94a3b8', iconType: 'trench_to_mud_hill_inv' },
 
   // Mud
   { id: 'mud', label: 'Mud', category: TileCategory.MUD, bgColor: '#3f2e27', fgColor: '#9ca3af', iconType: 'solid' },
