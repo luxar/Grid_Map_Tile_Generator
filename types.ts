@@ -30,3 +30,10 @@ export interface ToolState {
   selectedTileId: string;
   isDrawing: boolean;
 }
+
+export interface TileHistoryEntry {
+  row: number;
+  col: number;
+  previousCell: CellData;
+  newCell: CellData;
+}

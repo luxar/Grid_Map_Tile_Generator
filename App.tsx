@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MapGrid } from './components/MapGrid';
 import { TilePalette } from './components/TilePalette';
 import { ReportPanel } from './components/ReportPanel';
 import { ResizeModal } from './components/ResizeModal';
 import { HelpModal } from './components/HelpModal';
-import { GridState, CellData } from './types';
+import { GridState, CellData, TileHistoryEntry } from './types';
 import { DEFAULT_TILE, DEFAULT_COLS, DEFAULT_ROWS, TILE_MAP } from './constants';
 
 const createInitialGrid = (rows: number, cols: number): GridState => 
@@ -14,6 +14,7 @@ const createInitialGrid = (rows: number, cols: number): GridState =>
 
 export default function App() {
   const [grid, setGrid] = useState<GridState>(() => createInitialGrid(DEFAULT_ROWS, DEFAULT_COLS));
+  const [history, setHistory] = useState<TileHistoryEntry[]>([]);
   const [selectedTileId, setSelectedTileId] = useState<string>(DEFAULT_TILE);
   const [currentHeight, setCurrentHeight] = useState<number>(0);
   const [inventory, setInventory] = useState<Record<string, number>>({});
@@ -42,8 +43,49 @@ export default function App() {
     });
   };
 
+  const handleUndo = useCallback(() => {
+    setHistory(prevHistory => {
+      if (prevHistory.length === 0) return prevHistory;
+
+      const lastEntry = prevHistory[prevHistory.length - 1];
+      const newHistory = prevHistory.slice(0, -1);
+
+      setGrid(prevGrid => {
+        // Ensure within bounds
+        if (lastEntry.row >= prevGrid.length || lastEntry.col >= (prevGrid[0]?.length || 0)) {
+          return prevGrid;
+        }
+        const newGrid = prevGrid.map(r => r.map(c => ({ ...c })));
+        newGrid[lastEntry.row][lastEntry.col] = { ...lastEntry.previousCell };
+        return newGrid;
+      });
+
+      return newHistory;
+    });
+  }, []);
+
+  // Keyboard shortcut listener for Ctrl+Z / Cmd+Z
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user is typing in an input or textarea
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleUndo]);
+
   const handleCellClick = (row: number, col: number) => {
     setGrid(prevGrid => {
+      const prevCell = prevGrid[row][col];
       const newGrid = prevGrid.map(r => r.map(c => ({ ...c })));
       const cell = newGrid[row][col];
 
@@ -56,6 +98,18 @@ export default function App() {
         cell.rotation = 0;
         cell.height = currentHeight;
       }
+
+      // Record placement history
+      setHistory(h => [
+        ...h,
+        {
+          row,
+          col,
+          previousCell: { ...prevCell },
+          newCell: { ...cell }
+        }
+      ]);
+
       return newGrid;
     });
   };
@@ -66,13 +120,28 @@ export default function App() {
       // Optimization: only update if different to avoid rerenders
       if (prevGrid[row][col].tileId === selectedTileId && (prevGrid[row][col].height || 0) === currentHeight) return prevGrid;
       
+      const prevCell = prevGrid[row][col];
       const newGrid = prevGrid.map(r => r.map(c => ({ ...c })));
       newGrid[row][col] = { tileId: selectedTileId, rotation: 0, height: currentHeight };
+
+      // Record placement history
+      setHistory(h => [
+        ...h,
+        {
+          row,
+          col,
+          previousCell: { ...prevCell },
+          newCell: { ...newGrid[row][col] }
+        }
+      ]);
+
       return newGrid;
     });
   };
 
   const handleReset = () => {
+      // Reset history when clearing the map
+      setHistory([]);
       // Explicitly set all tiles to 'ground' based on current grid size
       setGrid(prevGrid => 
           Array.from({ length: prevGrid.length }, () => 
@@ -82,6 +151,8 @@ export default function App() {
   };
 
   const handleResize = (newRows: number, newCols: number, newTileSize: number) => {
+    // Reset history when resizing the map
+    setHistory([]);
     setTileSize(newTileSize);
     setGrid(prevGrid => {
       const newGrid: GridState = [];
@@ -155,12 +226,14 @@ export default function App() {
                       }));
 
                   if (data.grid && Array.isArray(data.grid)) {
+                      setHistory([]);
                       setGrid(normalizeGrid(data.grid));
                       if (data.tileSize && typeof data.tileSize === 'number') {
                           setTileSize(data.tileSize);
                       }
                       // Optionally we could setGridName(data.name) here if we wanted to prioritize file content
                   } else if (Array.isArray(data)) {
+                      setHistory([]);
                       setGrid(normalizeGrid(data));
                   } else {
                       alert('Invalid grid file format');
@@ -292,6 +365,27 @@ export default function App() {
                     </div>
 
                     <div className="h-6 w-px bg-slate-800 mx-2 hidden lg:block"></div>
+
+                    <button 
+                        onClick={handleUndo}
+                        disabled={history.length === 0}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors border text-xs font-medium ${
+                            history.length > 0 
+                                ? 'bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border-slate-700 cursor-pointer shadow-sm' 
+                                : 'bg-slate-850 text-slate-600 border-slate-800/80 cursor-not-allowed opacity-50'
+                        }`}
+                        title={history.length > 0 ? `Deshacer última colocación (Ctrl+Z) - ${history.length} en historial` : 'No hay acciones para deshacer (Ctrl+Z)'}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a5 5 0 015 5v2m0 0l-4-4m4 4l4-4M3 10l4-4m-4 4l4 4" />
+                        </svg>
+                        <span>Deshacer</span>
+                        {history.length > 0 && (
+                            <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400/20 text-amber-300 font-mono">
+                                {history.length}
+                            </span>
+                        )}
+                    </button>
 
                     <button 
                         onClick={() => setIsResizeModalOpen(true)}

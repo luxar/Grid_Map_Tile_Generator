@@ -36,6 +36,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                         <li><strong>Place:</strong> Click on any grid cell to place the selected tile.</li>
                         <li><strong>Rotate:</strong> Click on an already placed tile to rotate it 90 degrees.</li>
                         <li><strong>Paint:</strong> Click and drag across the grid to place multiple tiles quickly.</li>
+                        <li><strong>Undo (Deshacer):</strong> Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-xs text-amber-300">Ctrl+Z</kbd> or click the <strong>Deshacer</strong> button to revert placed tiles.</li>
                     </ul>
                 </div>
             </div>
